@@ -9,11 +9,14 @@ on:
     paths:
       - 'servipagos/**' # only start when something changes in this file directory
 
+env:
+  DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
+
 jobs:
   deploy_xandr_bundles:
     name: Deploy bundles
     uses: ./.github/workflows/deploy_bundle.yml
     with:
       BUNDLE_ENV: "prod"
-      DATABRICKS_TOKEN: "${{ secrets.DATABRICKS_TOKEN }}" #need to configure at github level
+      DATABRICKS_TOKEN: ${{ env.DATABRICKS_TOKEN }} #need to configure at github level
       WORKING_DIR: "./servipagos"
