@@ -1,0 +1,65 @@
+# The main job for servipagos
+resources:
+  jobs:
+    servipagos_job:
+      name: ${bundle.name}_job_${bundle.target}
+
+      schedule:
+        quartz_cron_expression: '0 30 10 * * ?'
+        timezone_id: America/Lima
+
+      email_notifications:
+        on_failure:
+          - augustompecho@yape.com.pe
+
+      tasks:
+        - task_key: notebook_task
+          job_cluster_key: job_cluster
+          notebook_task:
+            notebook_path: ./src/bronze/test_ingestion.scala
+          libraries:
+            - maven:
+                coordinates: com.azure.cosmos.spark:azure-cosmos-spark_3-2_2-12:4.25.0
+
+      job_clusters:
+        - job_cluster_key: job_cluster
+          new_cluster:
+            spark_version: 13.3.x-scala2.12
+            node_type_id: Standard_DS3_v2
+            autoscale:
+                min_workers: 1
+                max_workers: 4
+    
+    servipagos_job_repo_integration:
+      name: ${bundle.name}_github_source_job_${bundle.target}
+
+      schedule:
+        quartz_cron_expression: '0 30 10 * * ?'
+        timezone_id: America/Lima
+
+      email_notifications:
+        on_failure:
+          - augustompecho@yape.com.pe
+
+      tasks:
+        - task_key: notebook_task
+          job_cluster_key: job_cluster
+          notebook_task:
+            notebook_path: servipagos/src/bronze/test_ingestion
+            source: GIT
+          libraries:
+            - maven:
+                coordinates: com.azure.cosmos.spark:azure-cosmos-spark_3-2_2-12:4.25.0
+      git_source:
+        git_url: https://github.com/yaperos/app-lakehouse-yape.git
+        git_provider: gitHub
+        git_branch: feature/bundles
+
+      job_clusters:
+        - job_cluster_key: job_cluster
+          new_cluster:
+            spark_version: 13.3.x-scala2.12
+            node_type_id: Standard_DS3_v2
+            autoscale:
+                min_workers: 1
+                max_workers: 4

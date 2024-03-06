@@ -1,0 +1,12 @@
+# The main pipeline for lending
+resources:
+  pipelines:
+    lending_pipeline:
+      name: lending_pipeline
+      target: lending_${bundle.environment}
+      libraries:
+        - notebook:
+            path: ../src/dlt_pipeline.ipynb
+
+      configuration:
+        bundle.sourcePath: /Workspace/${workspace.file_path}/src

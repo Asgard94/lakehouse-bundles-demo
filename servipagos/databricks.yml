@@ -1,0 +1,71 @@
+# This is a Databricks asset bundle definition for servipagos.
+# See https://docs.databricks.com/dev-tools/bundles/index.html for documentation.
+bundle:
+  name: servipagos_yape3
+
+include:
+  - resources/*.yml
+
+variables:
+  job_grants:
+    description: Indicates user/group with permission on jobs
+  notebook_path:
+    description: Indicates workspace path of notebook
+    default: ''
+
+targets:
+  # The 'dev' target, used for development purposes.
+  # Whenever a developer deploys using 'dev', they get their own copy.
+  dev:
+    # We use 'mode: development' to make sure everything deployed to this target gets a prefix
+    # like '[dev my_user_name]'. Setting this mode also disables any schedules and
+    # automatic triggers for jobs and enables the 'development' mode for Delta Live Tables pipelines.
+    mode: development
+    default: true
+    variables:
+      job_grants: bryanmontoya@yape.com.pe
+    resources:
+      jobs:
+        servipagos_job:
+          permissions:
+            - user_name: ${var.job_grants}
+              level: CAN_MANAGE
+    workspace:
+      host: https://adb-7624286972541238.18.azuredatabricks.net/
+
+  # Optionally, there could be a 'staging' target here.
+  # (See Databricks docs on CI/CD at https://docs.databricks.com/dev-tools/bundles/index.html.)
+  #
+  staging:
+    mode: production
+    variables:
+      job_grants: danieleportugal@yape.com.pe
+    resources:
+      jobs:
+        servipagos_job:
+          permissions:
+            - user_name: ${var.job_grants}
+              level: CAN_MANAGE
+    workspace:
+      host: https://adb-7624286972541238.18.azuredatabricks.net/
+      root_path: /Shared/${bundle.name}/cert
+    run_as:
+      user_name: augustompecho@yape.com.pe
+
+  # The 'prod' target, used for production deployment.
+  prod:
+    mode: production
+    variables:
+      job_grants: deepeshnair@yape.com.pe
+    resources:
+      jobs:
+        servipagos_job:
+          permissions:
+            - user_name: ${var.job_grants}
+              level: CAN_MANAGE
+    workspace:
+      host: https://adb-7624286972541238.18.azuredatabricks.net/
+      root_path: /Shared/${bundle.name}/prod
+    run_as:
+      user_name: augustompecho@yape.com.pe
+    

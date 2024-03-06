@@ -1,0 +1,79 @@
+# This workflow validates, deploys, and runs the specified bundle
+# within a pre-production target named "dev".
+name: "Bundle deployment"
+
+# Ensure that only a single job or workflow using the same concurrency group
+# runs at a time.
+concurrency: 1
+
+# Trigger this workflow whenever a pull request is opened against the repo's
+# main branch or an existing pull request's head branch is updated.
+on:
+  workflow_call:
+    inputs:  
+      BUNDLE_ENV:
+        description: Databricks Environment to deploy
+        type: string
+        required: true
+
+      DATABRICKS_TOKEN:
+        description: Databricks Service Token
+        type: string
+        required: true
+      
+      WORKING_DIR:
+        description: Working directory of project bundle source code
+        type: string
+        required: true
+
+  workflow_dispatch:
+    inputs:  
+      BUNDLE_ENV:
+        description: Databricks Environment to deploy
+        type: string
+        required: true
+
+      DATABRICKS_TOKEN:
+        description: Databricks Service Token
+        type: string
+        required: true
+      
+      WORKING_DIR:
+        description: Working directory of project bundle source code
+        type: string
+        required: true
+    
+env:
+  SP_TOKEN: ${{ inputs.DATABRICKS_TOKEN }}
+  BUNDLE_ENV: ${{ inputs.BUNDLE_ENV }}
+  #SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
+  #SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
+
+jobs:
+  # Used by the "pipeline_update" job to deploy the bundle.
+  # Bundle validation is automatically performed as part of this deployment.
+  # If validation fails, this workflow fails.
+  deploy:
+    name: "Deploy bundle"
+    runs-on: ubuntu-latest
+
+    steps:
+      # Check out this repo, so that this workflow can access it.
+      - name: Check out the repo
+        uses: actions/checkout@v3
+
+      # Download the Databricks CLI.
+      # See https://github.com/databricks/setup-cli
+      - name: Prepare Databricks CLI 
+        uses: databricks/setup-cli@main
+
+      # Deploy the bundle to the "dev" target as defined
+      # in the bundle's settings file.
+      - name: Run Databricks bundle deploy 
+        run: databricks bundle deploy
+        working-directory: ${{ env.WORKING_DIR }} # should be parametrized
+        env:
+          DATABRICKS_TOKEN: ${{ env.SP_TOKEN }}
+          DATABRICKS_BUNDLE_ENV: ${{ env.BUNDLE_ENV }}
+
+      # TBD: ADD Slack notifications to inform about success/failures on deployment
