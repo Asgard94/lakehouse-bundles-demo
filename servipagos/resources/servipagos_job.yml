@@ -5,7 +5,7 @@ resources:
       name: ${bundle.name}_job_${bundle.target}
 
       schedule:
-        quartz_cron_expression: '0 30 09 * * ?'
+        quartz_cron_expression: '0 30 08 * * ?'
         timezone_id: America/Lima
 
       email_notifications:
