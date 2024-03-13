@@ -71,7 +71,7 @@ jobs:
       # in the bundle's settings file.
       - name: Run Databricks bundle deploy 
         run: databricks bundle deploy
-        working-directory: ${{ env.WORKING_DIR }} # should be parametrized
+        working-directory: "${{ inputs.WORKING_DIR }}" # should be parametrized
         env:
           DATABRICKS_TOKEN: ${{ env.SP_TOKEN }}
           DATABRICKS_BUNDLE_ENV: ${{ env.BUNDLE_ENV }}
