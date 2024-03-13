@@ -23,7 +23,7 @@ targets:
     mode: development
     default: true
     variables:
-      job_grants: bryanmontoya@yape.com.pe
+      job_grants: apechoc94@gmail.com
     resources:
       jobs:
         servipagos_job:
@@ -31,7 +31,7 @@ targets:
             - user_name: ${var.job_grants}
               level: CAN_MANAGE
     workspace:
-      host: https://adb-7624286972541238.18.azuredatabricks.net/
+      host: https://dbc-9d0a74d4-beab.cloud.databricks.com/
 
   # Optionally, there could be a 'staging' target here.
   # (See Databricks docs on CI/CD at https://docs.databricks.com/dev-tools/bundles/index.html.)
@@ -39,7 +39,7 @@ targets:
   staging:
     mode: production
     variables:
-      job_grants: danieleportugal@yape.com.pe
+      job_grants: apechoc94@gmail.com
     resources:
       jobs:
         servipagos_job:
@@ -47,16 +47,16 @@ targets:
             - user_name: ${var.job_grants}
               level: CAN_MANAGE
     workspace:
-      host: https://adb-7624286972541238.18.azuredatabricks.net/
+      host: https://dbc-9d0a74d4-beab.cloud.databricks.com/
       root_path: /Shared/${bundle.name}/cert
     run_as:
-      user_name: augustompecho@yape.com.pe
+      user_name: apechoc94@gmail.com
 
   # The 'prod' target, used for production deployment.
   prod:
     mode: production
     variables:
-      job_grants: deepeshnair@yape.com.pe
+      job_grants: apechoc94@gmail.com
     resources:
       jobs:
         servipagos_job:
@@ -64,8 +64,8 @@ targets:
             - user_name: ${var.job_grants}
               level: CAN_MANAGE
     workspace:
-      host: https://adb-7624286972541238.18.azuredatabricks.net/
+      host: https://dbc-9d0a74d4-beab.cloud.databricks.com/
       root_path: /Shared/${bundle.name}/prod
     run_as:
-      user_name: augustompecho@yape.com.pe
+      user_name: apechoc94@gmail.com
     
