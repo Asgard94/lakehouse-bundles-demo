@@ -1,0 +1,24 @@
+targets:
+  dev:
+    resources:
+      jobs:
+        servipagos_job:
+          permissions:
+            - user_name: ${var.job_grants}
+              level: CAN_MANAGE
+  
+  staging:
+    resources:
+      jobs:
+        servipagos_job:
+          permissions:
+            - user_name: ${var.job_grants}
+              level: CAN_MANAGE
+  
+  prod:
+    resources:
+      jobs:
+        servipagos_job:
+          permissions:
+            - user_name: ${var.job_grants}
+              level: CAN_MANAGE

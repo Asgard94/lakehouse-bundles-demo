@@ -4,7 +4,13 @@ bundle:
   name: servipagos_yape3
 
 include:
-  - resources/*.yml
+  - resources/**/*.yml
+
+sync:
+  exclude:
+    - src/
+    - tests/
+    - .gitignore
 
 variables:
   job_grants:
@@ -24,12 +30,6 @@ targets:
     default: true
     variables:
       job_grants: apechoc94@gmail.com
-    resources:
-      jobs:
-        servipagos_job:
-          permissions:
-            - user_name: ${var.job_grants}
-              level: CAN_MANAGE
     workspace:
       host: https://dbc-9d0a74d4-beab.cloud.databricks.com/
 
@@ -40,12 +40,6 @@ targets:
     mode: production
     variables:
       job_grants: apechoc94@gmail.com
-    resources:
-      jobs:
-        servipagos_job:
-          permissions:
-            - user_name: ${var.job_grants}
-              level: CAN_MANAGE
     workspace:
       host: https://dbc-9d0a74d4-beab.cloud.databricks.com/
       root_path: /Shared/${bundle.name}/cert
@@ -57,12 +51,6 @@ targets:
     mode: production
     variables:
       job_grants: apechoc94@gmail.com
-    resources:
-      jobs:
-        servipagos_job:
-          permissions:
-            - user_name: ${var.job_grants}
-              level: CAN_MANAGE
     workspace:
       host: https://dbc-9d0a74d4-beab.cloud.databricks.com/
       root_path: /Shared/${bundle.name}/prod
