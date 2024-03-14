@@ -15,15 +15,15 @@ on:
         description: Databricks Environment to deploy
         type: string
         required: true
-
-      DATABRICKS_TOKEN:
-        description: Databricks Service Token
-        type: string
-        required: true
       
       WORKING_DIR:
         description: Working directory of project bundle source code
         type: string
+        required: true
+    
+    secrets:
+      DATABRICKS_TOKEN:
+        description: 'Access token for Databricks CLI'
         required: true
 
   workflow_dispatch:
@@ -44,7 +44,6 @@ on:
         required: true
     
 env:
-  SP_TOKEN: ${{ inputs.DATABRICKS_TOKEN }}
   BUNDLE_ENV: ${{ inputs.BUNDLE_ENV }}
   #SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
   #SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
@@ -66,6 +65,15 @@ jobs:
       # See https://github.com/databricks/setup-cli
       - name: Prepare Databricks CLI 
         uses: databricks/setup-cli@main
+
+      - name: Set up Databricks token
+        shell: bash
+        run: |
+          if [ "${{ secrets.DATABRICKS_TOKEN }}" != '' ]; then
+            echo "SP_TOKEN=${{ secrets.DATABRICKS_TOKEN }}" >> $GITHUB_ENV;
+          else
+            echo "SP_TOKEN=${{ inputs.DATABRICKS_TOKEN }}" >> $GITHUB_ENV;
+          fi
 
       # Deploy the bundle to the "dev" target as defined
       # in the bundle's settings file.
